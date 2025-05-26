@@ -1,7 +1,9 @@
 from datetime import datetime
+from typing import List, Dict, Any
 
 
-def filter_by_state(operation_list: list[dict], state: str = "EXECUTED") -> list[dict]:
+def filter_by_state(operation_list: List[Dict[str, Any]], state: str = "EXECUTED") -> List[Dict[str, Any]]:
+
     """
     Фильтрует список словарей по значению ключа 'state'
     """
