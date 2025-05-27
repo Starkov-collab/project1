@@ -1,6 +1,25 @@
-def get_mask_card_number(card_number: str) -> str:
-    """Маскирует номер карты пользователя."""
-    return f"{card_number[:4]} {card_number[4:6]}** **** {card_number[-4:]}"
+from multiprocessing.managers import Value
+from typing import Union
+
+
+def get_mask_card_number(card_number: Union[int,str]) -> str:
+    """
+    Принимает номер карты из 16 цифр и возвращает в формате ХХХХ ХХ** **** XXXX,
+    где Х - это замаскированная цифра
+    :param card_number: Номер карты
+    :return: Возвращаем маску карты
+    """
+    str_card = str(card_number)
+    """Преобразованием в строку если номер карты запрашивается не через input"""
+
+    if len(str_card) != 16 :
+        """Проверка длины карты"""
+        raise ValueError("Номер карты должен содержать 16 цифр")
+
+    if not str_card.isdigit() :
+        raise ValueError("Номер карты должен содержать только цифры")
+    mask_card: str = f"{str_card[:4]} {str_card[4:6]}** **** {str_card[-4:]}"
+    return mask_card
 
 
 def get_mask_account(account_number: str) -> str:
