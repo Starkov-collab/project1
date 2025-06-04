@@ -1,6 +1,3 @@
-from typing import Dict,List,Iterator,Any,Generator
-
-
 transactions = (
     [
         {
@@ -82,10 +79,7 @@ transactions = (
 )
 
 
-def filter_by_currency(
-    transactions: List[Dict[str, Any]],
-    currency_code: str
-) -> Iterator[Dict[str, Any]]:
+def filter_by_currency(transactions, currency_code):
     """Фильтрует транзакции по заданному коду валюты и возвращает итератор."""
     for transaction in transactions:
         if transaction["operationAmount"]["currency"]["code"] == currency_code:
@@ -99,8 +93,9 @@ usd_transactions = filter_by_currency(transactions, "USD")
 print(list(usd_transactions))
 
 
-def transaction_descriptions(transactions) :
-    for transaction in transactions :
+def transaction_descriptions(transactions):
+    """Генератор, который возвращает описания транзакций по одной."""
+    for transaction in transactions:
         yield transaction["description"]
 
 
@@ -109,18 +104,17 @@ for _ in range(5) :
     print(next(descriptions))
 
 
-
-def card_number_generator(star : int , end : int) -> Generator[str,None, None] :
+def card_number_generator(start, end):
     """
     Генератор номеров банковских карт в формате XXXX XXXX XXXX XXXX.
 
     Args:
-        start: Начальное значение диапазона (от 1).
-        end: Конечное значение диапазона (до 9999999999999999).
+        start: Начальное значение диапазона (от 1)
+        end: Конечное значение диапазона (до 9999999999999999)
     """
     if not (1 <= start <= end <= 9999999999999999):
         raise ValueError("Диапазон должен быть от 1 до 9999999999999999")
     for number in range(start, end + 1):
         card_str = f"{number:016d}"
-        yield ' '.join([card_str[i:i + 4] for i in range(0, 16, 4))
+        yield ' '.join([card_str[i:i + 4] for i in range(0, 16, 4)])
 
