@@ -117,3 +117,97 @@ bank-operations/
 
 bash
 python -m pytest tests/
+
+
+# Модуль для работы с банковскими транзакциями
+Этот модуль предоставляет инструменты для работы с банковскими транзакциями, включая фильтрацию по валюте, извлечение описаний операций и генерацию номеров банковских карт.
+
+## Установка
+bash
+pip install -e .
+### Функционал модуля
+1. Фильтрация транзакций по валюте (filter_by_currency)
+Функция фильтрует список транзакций, возвращая только те, которые выполнены в указанной валюте.
+
+Пример использования:
+
+python
+from transaction_utils import filter_by_currency
+
+# Получаем только USD-транзакции
+usd_transactions = filter_by_currency(transactions, "USD")
+
+# Преобразуем итератор в список для просмотра
+print(list(usd_transactions))
+Ожидаемый вывод:
+
+python
+[
+    {
+        "id": 939719570,
+        "operationAmount": {"currency": {"code": "USD"}},
+        "description": "Перевод организации",
+        ...
+    },
+    {
+        "id": 142264268, 
+        "operationAmount": {"currency": {"code": "USD"}},
+        "description": "Перевод со счета на счет",
+        ...
+    },
+    {
+        "id": 895315941,
+        "operationAmount": {"currency": {"code": "USD"}},
+        "description": "Перевод с карты на карту",
+        ...
+    }
+]
+2. Извлечение описаний транзакций (transaction_descriptions)
+Генератор, который последовательно возвращает описания транзакций.
+
+Пример использования:
+
+python
+from transaction_utils import transaction_descriptions
+
+# Создаем генератор описаний
+descriptions = transaction_descriptions(transactions)
+
+# Получаем первые 3 описания
+for _ in range(3):
+    print(next(descriptions))
+Ожидаемый вывод:
+
+Перевод организации
+Перевод со счета на счет
+Перевод со счета на счет
+3. Генератор номеров банковских карт (card_number_generator)
+Генерирует номера карт в указанном диапазоне в формате XXXX XXXX XXXX XXXX.
+
+Пример использования:
+
+python
+from transaction_utils import card_number_generator
+
+# Генерируем номера карт от 1 до 5
+for card_number in card_number_generator(1, 5):
+    print(card_number)
+Ожидаемый вывод:
+
+0000 0000 0000 0001
+0000 0000 0000 0002
+0000 0000 0000 0003
+0000 0000 0000 0004
+0000 0000 0000 0005
+Тестирование
+Для запуска тестов выполните:
+
+bash
+pytest --cov=transaction_utils --cov-report=html tests/
+Отчет о покрытии кода тестами будет доступен в директории htmlcov/.
+
+Требования
+
+pytest (для тестирования)
+
+pytest-cov (для проверки покрытия)
