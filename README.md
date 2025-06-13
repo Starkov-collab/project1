@@ -117,3 +117,115 @@ bank-operations/
 
 bash
 python -m pytest tests/
+
+# Декоратор log для логирования выполнения функций
+Этот модуль предоставляет декоратор log для логирования выполнения функций, который может записывать результаты как в консоль, так и в файл.
+
+## Функциональность
+### Декоратор log предоставляет следующие возможности:
+
+Логирование успешного выполнения функции:
+
+Записывает имя функции и возвращаемое значение
+
+Поддерживает как вывод в консоль, так и запись в файл
+
+Логирование ошибок:
+
+Перехватывает все исключения
+
+Записывает тип ошибки, аргументы функции и ключевые аргументы
+
+Поддерживает оба режима вывода (консоль/файл)
+
+Гибкость вывода:
+
+При указании filename логи пишутся в файл
+
+Без filename - вывод в консоль
+
+## Использование
+Базовый пример (вывод в консоль)
+python
+@log()
+def add(a, b):
+    return a + b
+
+add(2, 3)  # Вывод: "Функция add успешно завершена. Результат: 5"
+Логирование в файл
+python
+@log(filename="operations.log")
+def multiply(a, b):
+    return a * b
+
+multiply(4, 5)  # Запись в файл operations.log
+### Обработка ошибок
+python
+@log()
+def divide(a, b):
+    return a / b
+
+divide(10, 0)  # Вывод: "Ошибка в divide: ZeroDivisionError, args: (10, 0), kwargs: {}"
+### Тестирование
+Для тестирования декоратора используется pytest. Тесты проверяют:
+
+Успешное выполнение с выводом в консоль
+
+Обработку ошибок с выводом в консоль
+
+Успешное выполнение с записью в файл
+
+Обработку ошибок с записью в файл
+
+Режим добавления записей в файл (не перезапись)
+
+Сохранение метаданных функции
+
+Запуск тестов
+bash
+pytest tests/test_decorators.py -v
+
+pytest (для тестирования)
+
+# Рекомендации по использованию
+Для сохранения метаданных функций рекомендуется использовать @functools.wraps
+
+Для важных задач рассмотрите добавление временных меток в логи
+
+При работе с файлами убедитесь в наличии прав на запись
+
+Для больших проектов рассмотрите использование стандартного модуля logging
+
+Пример расширенного использования
+python
+from datetime import datetime
+from functools import wraps
+
+def log(filename=None, with_time=False):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                result = func(*args, **kwargs)
+                timestamp = f"[{datetime.now()}] " if with_time else ""
+                message = f"{timestamp}Функция {func.__name__} успешно завершена. Результат: {result}"
+                
+                if filename:
+                    with open(filename, "a", encoding="utf-8") as f:
+                        f.write(message + "\n")
+                else:
+                    print(message)
+                
+                return result
+            except Exception as e:
+                timestamp = f"[{datetime.now()}] " if with_time else ""
+                message = f"{timestamp}Ошибка в {func.__name__}: {type(e).__name__}, args: {args}, kwargs: {kwargs}"
+                
+                if filename:
+                    with open(filename, "a", encoding="utf-8") as f:
+                        f.write(message + "\n")
+                else:
+                    print(message)
+        return wrapper
+    return decorator
+
