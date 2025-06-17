@@ -19,7 +19,7 @@ def load_transactions(file_path : str) -> List[Dict] :
             else :
                 return []
             """возвращаем пустой список если данных нет или вызывает ошибку"""
-    except FileNotFoundError :
+    except (FileNotFoundError, json.JSONDecodeError) :
         return []
 
 
