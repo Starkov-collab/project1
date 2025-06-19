@@ -1,4 +1,16 @@
+import logging
 from typing import Union
+
+logger = logging.getLogger('masks')
+logger.setLevel(logging.INFO)
+file_handler = logging.FileHandler('logs/masks.log', mode='w')
+file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s: %(message)s')
+file_handler.setFormatter(file_formatter)
+logger.addHandler(file_handler)
+
+
+
+
 
 
 def get_mask_card_number(card_number: Union[int,str]) -> str:
@@ -10,10 +22,12 @@ def get_mask_card_number(card_number: Union[int,str]) -> str:
     """
     str_card = str(card_number)
     """Преобразованием в строку если номер карты запрашивается не через input"""
+    logger.info(f'Выполняем запрос на наличие цифр')
     if not str_card.isdigit() :
         """проверка на то,чтобы были только цифры"""
         return "Номер карты должен содержать только цифры"
 
+    logger.info(f'Выполняем проверку на действительность , что это карта а не счет')
     if len(str_card) != 16 :
         """Проверка длины карты"""
         return "Номер карты должен содержать 16 цифр"
@@ -27,10 +41,12 @@ def get_mask_account(account_number: str) -> str:
     """Маскирует номер счета"""
     str_card = str(account_number)
 
+    logger.info(f'Выполняем запрос на наличие цифр')
     if not str_card.isdigit() :
         """проверка на то,чтобы были только цифры"""
         return "Номер счет должен содержать только цифры"
 
+    logger.info(f'Выполняем проверку на действительность , что это счет а не карта')
     if len(str_card) != 20 :
         return  "Номер счета должен содержать 20 цифр"
 
